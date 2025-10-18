@@ -1,3 +1,12 @@
-com\cibertec\restaurantwebricuy\resources\JakartaEE11Resource.class
-service\TestConexion.class
 com\cibertec\restaurantwebricuy\JakartaRestConfiguration.class
+com\cibertec\restaurantwebricuy\resources\JakartaEE11Resource.class
+dao\ReservaDao.class
+dto\ReservaResponseDTO.class
+model\Reserva.class
+controller\PingResource.class
+controller\ReservaController.class
+service\TestConexion.class
+dto\ReservaRequestDTO.class
+service\ReservaService.class
+service\impl\ReservaServiceImpl.class
+dto\MesaDTO.class

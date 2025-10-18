@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Reservas | Restaurante Ricuy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  <!-- 🔹 NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-warning d-flex align-items-center" href="#">
+        <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="logo" width="30" class="me-2">
+        Restaurante Ricuy
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link active" href="#">Reservas</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Mesas</a></li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-outline-light btn-sm" href="#"><i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-warning btn-sm text-dark fw-semibold" href="#"><i class="bi bi-person-plus-fill me-1"></i>Registrarse</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🔹 CONTENIDO PRINCIPAL -->
+  <main class="container flex-grow-1 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold text-dark"><i class="bi bi-calendar-check me-2 text-primary"></i>Mis Reservas</h2>
+      <button class="btn btn-primary" id="btnNuevaReserva" data-bs-toggle="modal" data-bs-target="#modalReserva">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Reserva
+      </button>
+    </div>
+
+    <div class="card border-0 shadow-lg">
+      <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+          <table class="table table-hover mb-0 align-middle text-center">
+            <thead class="table-dark text-uppercase small sticky-top">
+              <tr>
+                <th>ID</th>
+                <th>MESA</th>
+                <th>FECHA</th>
+                <th>HORA INICIO</th>
+                <th>HORA FIN</th>
+                <th>ESTADO</th>
+                <th>OBSERVACIÓN</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyReservas">
+              <tr><td colspan="8" class="text-muted py-4">⏳ Cargando reservas...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 🔹 MODAL NUEVA RESERVA -->
+  <div class="modal fade" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="modalReservaLabel"><i class="bi bi-plus-circle me-2"></i>Nueva Reserva</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="formReserva">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Número de Mesa</label>
+              <select id="selectMesa" class="form-select" required>
+                <option selected disabled>Cargando mesas...</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Fecha</label>
+              <input type="date" id="fecha" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Hora de Inicio</label>
+              <input type="time" id="horaInicio" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Hora de Fin</label>
+              <input type="time" id="horaFin" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Observación</label>
+              <textarea id="observacion" class="form-control" rows="2" placeholder="Motivo o detalles de la reserva"></textarea>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Registrar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 MODAL DETALLES RESERVA -->
+  <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalDetallesLabel"><i class="bi bi-eye me-2"></i>Detalles de la Reserva</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> <span id="detId"></span></li>
+            <li class="list-group-item"><strong>Mesa:</strong> <span id="detMesa"></span></li>
+            <li class="list-group-item"><strong>Fecha:</strong> <span id="detFecha"></span></li>
+            <li class="list-group-item"><strong>Hora Inicio:</strong> <span id="detHoraInicio"></span></li>
+            <li class="list-group-item"><strong>Hora Fin:</strong> <span id="detHoraFin"></span></li>
+            <li class="list-group-item"><strong>Estado:</strong> <span id="detEstado"></span></li>
+            <li class="list-group-item"><strong>Observación:</strong> <span id="detObs"></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 FOOTER -->
+  <footer class="bg-dark text-white mt-auto py-4 border-top border-secondary">
+    <div class="container text-center">
+      <p class="fw-semibold mb-1">Restaurante Ricuy © 2025</p>
+      <p class="mb-1 text-secondary small">Sabor, calidad y tradición peruana</p>
+      <p class="mb-0 small text-secondary">
+        <i class="bi bi-geo-alt"></i> Av. Los Olivos 123, Lima &nbsp;|&nbsp;
+        <i class="bi bi-telephone"></i> (01) 234-5678 &nbsp;|&nbsp;
+        <i class="bi bi-envelope"></i> contacto@ricuy.pe
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 🔹 SCRIPT FUNCIONAL -->
+  <script>
+  const tbody = document.getElementById("tbodyReservas");
+
+  // 🔹 Cargar reservas
+  async function cargarReservas() {
+    console.log("📦 Cargando reservas desde backend...");
+    const res = await fetch("http://localhost:8080/ProyectoRestaurantWebRicuy/api/reservas/cliente");
+    const data = await res.json();
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='8' class='text-muted py-3'>⚠️ No tienes reservas registradas.</td></tr>";
+      return;
+    }
+
+    data.forEach(r => {
+      const estadoClass =
+        r.estado === "Pendiente" ? "badge bg-warning text-dark" :
+        r.estado === "Confirmada" ? "badge bg-success" :
+        r.estado === "Completada" ? "badge bg-primary" :
+        "badge bg-danger";
+
+      tbody.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${r.id}</td>
+          <td>${r.numeroMesa}</td>
+          <td>${r.fecha?.substring(0,10)}</td>
+          <td>${r.horaInicio}</td>
+          <td>${r.horaFin}</td>
+          <td><span class="${estadoClass}">${r.estado}</span></td>
+          <td>${r.observacion}</td>
+          <td>
+            <button class="btn btn-info btn-sm me-1 btn-detalles" data-id="${r.id}">
+              <i class="bi bi-eye"></i> Detalles
+            </button>
+            <button class="btn btn-danger btn-sm btn-cancelar" data-id="${r.id}">
+              <i class="bi bi-x-circle"></i> Cancelar
+            </button>
+          </td>
+        </tr>
+      `);
+    });
+
+    // Eventos de detalle
+    document.querySelectorAll(".btn-detalles").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        const reserva = data.find(r => r.id == id);
+        mostrarDetalles(reserva);
+      });
+    });
+
+    // Eventos de cancelación
+    document.querySelectorAll(".btn-cancelar").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-id");
+        if (confirm("¿Seguro que deseas cancelar esta reserva?")) {
+          await cancelarReserva(id);
+        }
+      });
+    });
+  }
+
+  // 🔹 Mostrar modal con detalles
+  function mostrarDetalles(r) {
+    document.getElementById("detId").textContent = r.id;
+    document.getElementById("detMesa").textContent = r.numeroMesa;
+    document.getElementById("detFecha").textContent = r.fecha?.substring(0,10);
+    document.getElementById("detHoraInicio").textContent = r.horaInicio;
+    document.getElementById("detHoraFin").textContent = r.horaFin;
+    document.getElementById("detEstado").textContent = r.estado;
+    document.getElementById("detObs").textContent = r.observacion;
+    new bootstrap.Modal(document.getElementById("modalDetalles")).show();
+  }
+
+  // 🔹 Cancelar reserva (PUT)
+  async function cancelarReserva(id) {
+    try {
+      console.log("🟠 Intentando cancelar:", id);
+      const res = await fetch(`http://localhost:8080/ProyectoRestaurantWebRicuy/api/reservas/cliente/${id}/cancelar`, {
+        method: "PUT"
+      });
+      if (res.ok) {
+        alert("✅ Reserva cancelada correctamente.");
+        cargarReservas();
+      } else {
+        alert("⚠️ Error al cancelar la reserva.");
+      }
+    } catch (err) {
+      console.error("❌ Error al cancelar:", err);
+    }
+  }
+
+  // 🔹 Cargar mesas en el modal de registro
+  document.getElementById("modalReserva").addEventListener("show.bs.modal", async () => {
+    const select = document.getElementById("selectMesa");
+    const res = await fetch("http://localhost:8080/ProyectoRestaurantWebRicuy/api/reservas/cliente/mesas-disponibles");
+    const mesas = await res.json();
+    select.innerHTML = "<option disabled selected>Seleccione una mesa</option>";
+    mesas.forEach(m => select.insertAdjacentHTML("beforeend", `<option value="${m.id}">Mesa ${m.numero}</option>`));
+  });
+
+  // 🔹 Registrar nueva reserva
+  document.getElementById("formReserva").addEventListener("submit", async e => {
+    e.preventDefault();
+    const reserva = {
+      idMesa: parseInt(document.getElementById("selectMesa").value),
+      fecha: document.getElementById("fecha").value,
+      horaInicio: document.getElementById("horaInicio").value,
+      horaFin: document.getElementById("horaFin").value,
+      observacion: document.getElementById("observacion").value
+    };
+
+    const res = await fetch("http://localhost:8080/ProyectoRestaurantWebRicuy/api/reservas/cliente", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reserva)
+    });
+
+    if (res.ok) {
+      alert("✅ Reserva registrada correctamente.");
+      bootstrap.Modal.getInstance(document.getElementById("modalReserva")).hide();
+      cargarReservas();
+    } else {
+      alert("⚠️ Error al registrar la reserva.");
+    }
+  });
+
+  cargarReservas();
+  </script>
+</body>
+</html>
