@@ -1,6 +1,9 @@
 
 package controller;
 
+import com.ricuy.ws.Usuario;
+import com.ricuy.ws.UsuarioService;
+import com.ricuy.ws.UsuarioService_Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -10,72 +13,33 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@WebServlet(name = "RegistroServlet", urlPatterns = {"/RegistroServlet"})
+@WebServlet("/registro")
 public class RegistroServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+  
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegistroServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RegistroServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        // Crear objeto Usuario (clase generada por el cliente SOAP)
+        Usuario u = new Usuario();
+        u.setNombreCompleto(req.getParameter("nombre"));
+        u.setCorreo(req.getParameter("correo"));
+        u.setContrasena(req.getParameter("contrasena"));
+        // Nota: idRol no se envía; el microservicio asigna rol=Cliente (3) en DAO
+
+        // Crear el Service y obtener el puerto
+        UsuarioService_Service service = new UsuarioService_Service();
+        UsuarioService port = service.getUsuarioServicePort(); // o getUsuariosService() según el nombre
+
+        // Invocar operación registrarUsuario (típicamente boolean)
+        boolean ok = port.registrarUsuario(u);
+
+        if (ok) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/login.jsp");
+        } else {
+            req.setAttribute("error", "Error al registrar usuario");
+            req.getRequestDispatcher("/jsp/registro.jsp").forward(req, resp);
         }
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    
 }
